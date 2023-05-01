@@ -1,7 +1,8 @@
 import random
 import time
 
-#TODO timer soll Program immer stoppen können
+
+# TODO timer soll Program immer stoppen können
 
 def getSign(x: int):
     if x == 0:
