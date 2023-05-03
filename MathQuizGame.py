@@ -1,8 +1,9 @@
 import random
+import threading
 import time
 
 
-# TODO timer soll Program immer stoppen können
+# TODO Division sollte ohne Rest sein
 
 def getSign(x: int):
     if x == 0:
@@ -22,10 +23,6 @@ def newEquation():
     return str(number1) + sign + str(number2)
 
 
-def printEquation(equation: str):
-    print(equation)
-
-
 def getSolution(equation: str):
     x = int(equation[0])
     y = int(equation[2])
@@ -42,28 +39,37 @@ def getSolution(equation: str):
 
 
 class MathQuizGame:
-    correct = 0
+    def __init__(self):
+        self.correct = 0
+        self.lock = threading.Lock()
+        self.running = True
 
     def start(self):
         print("Press enter to start the game")
         input()
-        begin = time.time()
-        while time.time() - begin < 10:
-            equation = newEquation()
-            solution = getSolution(equation)
-            print(solution)
-            printEquation(equation)
-            answer = 1000
-            while answer != solution:
-                if time.time() - begin > 10:
-                    break
-                try:
-                    answer = int(input())
-                except ValueError:
-                    print("Answer should be a number")
-            if answer == solution:
-                self.correct += 1
+        self.work()
         self.end()
 
     def end(self):
+        self.running = False
         print("You answered " + str(self.correct) + " equations correct")
+
+    def work(self):
+        begin = time.time()
+        while time.time() - begin <= 10:
+            equation = newEquation()
+            solution = getSolution(equation)
+            print(solution)
+            print(equation)
+            answer = 1000
+            while answer != solution:
+                try:
+                    answer = int(input())
+                    if answer == solution and time.time() - begin <= 10:
+                        self.correct += 1
+                except ValueError:
+                    print("Answer should be a number")
+
+
+if __name__ == '__main__':
+    MathQuizGame().start()
