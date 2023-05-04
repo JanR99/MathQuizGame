@@ -3,8 +3,6 @@ import threading
 import time
 
 
-# TODO Division sollte ohne Rest sein
-
 def getSign(x: int):
     if x == 0:
         return "+"
@@ -17,10 +15,15 @@ def getSign(x: int):
 
 
 def newEquation():
-    number1 = random.randrange(1, 10)
-    number2 = random.randrange(1, 10)
     sign = getSign(random.randrange(4))
-    return str(number1) + sign + str(number2)
+    if sign == "/":
+        equations = ["2/2", "2/1", "3/3", "3/1", "4/4", "4/2", "4/1", "5/5", "5/1", "6/6", "6/2", "6/1", "7/7", "7/1",
+                     "8/8", "8/4", "8/1", "9/9", "9/3", "9/1"]
+        return equations[random.randrange(len(equations))]
+    else:
+        number1 = random.randrange(1, 10)
+        number2 = random.randrange(1, 10)
+        return str(number1) + sign + str(number2)
 
 
 def getSolution(equation: str):
@@ -59,7 +62,6 @@ class MathQuizGame:
         while time.time() - begin <= 10:
             equation = newEquation()
             solution = getSolution(equation)
-            print(solution)
             print(equation)
             answer = 1000
             while answer != solution:
